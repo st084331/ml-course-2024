@@ -1,0 +1,27 @@
+from sklearn.tree import DecisionTreeClassifier
+import numpy as np
+from scipy.stats import mode
+
+
+class Bagging:
+    def __init__(self, n_learners=10):
+        self.n_learners = n_learners
+        self.learners = []
+
+    def fit(self, X, y):
+        self.learners = []
+        n_samples = X.shape[0]
+
+        for _ in range(self.n_learners):
+            sample_indices = np.random.choice(np.arange(n_samples), size=n_samples, replace=True)
+            X_sample = X[sample_indices]
+            y_sample = y[sample_indices]
+
+            learner = DecisionTreeClassifier()
+            learner.fit(X_sample, y_sample)
+            self.learners.append(learner)
+
+    def predict(self, X):
+        predictions = np.array([learner.predict(X) for learner in self.learners])
+        majority_vote = mode(predictions, axis=0)[0]
+        return majority_vote.flatten()
