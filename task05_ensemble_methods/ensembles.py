@@ -1,4 +1,7 @@
 import pandas as pd
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, roc_auc_score
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import optuna
@@ -111,5 +114,23 @@ if best_classifier in model_map:
 
     print(f'Best classifier: {best_classifier}')
     print(f'Accuracy of the best classifier after hyperparameter optimization: {accuracy:.4f}')
+
+    precision = precision_score(y_test, predictions, average='macro')
+    recall = recall_score(y_test, predictions, average='macro')
+    f1 = f1_score(y_test, predictions, average='macro')
+    roc_auc = roc_auc_score(y_test, model.predict_proba(X_test), multi_class='ovr')
+    print(f'Precision: {precision:.4f}')
+    print(f'Recall: {recall:.4f}')
+    print(f'F1 Score: {f1:.4f}')
+    print(f'ROC AUC Score: {roc_auc:.4f}')
+
+    cm = confusion_matrix(y_test, predictions)
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    plt.title('Confusion Matrix')
+    plt.xlabel('Predicted Labels')
+    plt.ylabel('True Labels')
+    plt.show()
+
 else:
     print(f'Classifier {best_classifier} is not recognized.')
