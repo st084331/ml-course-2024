@@ -35,3 +35,11 @@ class AdaBoost:
     def score(self, X, y):
         predictions = self.predict(X)
         return accuracy_score(y, predictions)
+
+    def get_params(self, deep=True):
+        return {"n_learners": self.n_learners}
+
+    def set_params(self, **parameters):
+        for parameter, value in parameters.items():
+            setattr(self, parameter, value)
+        return self
