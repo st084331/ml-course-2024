@@ -1,6 +1,7 @@
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 from scipy.stats import mode
+from sklearn.metrics import accuracy_score
 
 
 class Bagging:
@@ -25,3 +26,7 @@ class Bagging:
         predictions = np.array([learner.predict(X) for learner in self.learners])
         majority_vote = mode(predictions, axis=0)[0]
         return majority_vote.flatten()
+
+    def score(self, X, y):
+        predictions = self.predict(X)
+        return accuracy_score(y, predictions)

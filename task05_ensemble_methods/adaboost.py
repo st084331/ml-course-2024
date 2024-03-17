@@ -1,5 +1,6 @@
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
+from sklearn.metrics import accuracy_score
 
 
 class AdaBoost:
@@ -30,3 +31,7 @@ class AdaBoost:
         learner_preds = np.array([learner.predict(X) for learner in self.learners])
         final_output = np.dot(self.learner_weights, learner_preds)
         return np.sign(final_output)
+
+    def score(self, X, y):
+        predictions = self.predict(X)
+        return accuracy_score(y, predictions)
